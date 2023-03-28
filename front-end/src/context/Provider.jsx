@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import MyContext from './Context';
 
 function Provider({ children }) {
-
   return (
-    <MyContext.Provider value={ value }>
+    <MyContext.Provider>
       { children }
     </MyContext.Provider>
   );
