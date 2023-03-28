@@ -1,13 +1,13 @@
 require('dotenv').config();
 
-const environment = process.env.NODE_ENV || "test";
+const environment = process.env.NODE_ENV || 'test';
 
 const suffix = {
-  prod: "",
-  production: "",
-  dev: "-dev",
-  development: "-dev",
-  test: "-test",
+  prod: '',
+  production: '',
+  dev: '-dev',
+  development: '-dev',
+  test: '-test',
 };
 
 const options = {
@@ -23,6 +23,8 @@ const options = {
   },
   logging: false,
 };
+
+console.log(options);
 
 module.exports = {
   development: {
