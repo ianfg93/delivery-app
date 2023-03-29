@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import MyContext from './Context';
 
 function Provider({ children }) {
+  const [loading, setLoading] = useState(false);
+
+  const value = useMemo(() => ({
+    loading,
+    changeLoadingState() {
+      setLoading(!loading);
+    },
+  }), [
+    loading,
+  ]);
+
   return (
-    <MyContext.Provider>
+    <MyContext.Provider value={ value }>
       { children }
     </MyContext.Provider>
   );
