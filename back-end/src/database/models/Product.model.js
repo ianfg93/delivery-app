@@ -1,16 +1,14 @@
-const ProductsModel = (sequelize, DataTypes) => {
-    const Product = sequelize.define('Product', {
+module.exports = (sequelize, DataTypes) => {
+    const ProductModel = sequelize.define('Product', {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       name: DataTypes.STRING,
       price: DataTypes.DECIMAL(4, 2),
-      urlImage: DataTypes.STRING,
+      urlImage: { type: DataTypes.STRING, field: 'url_Image' }
     }, {
       timestamps: false,
       tableName: 'products',
       underscored: true,
     });
   
-    return Product;
+    return ProductModel;
   };
-  
-  module.exports = ProductsModel;

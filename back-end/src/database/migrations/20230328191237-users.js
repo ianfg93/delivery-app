@@ -19,7 +19,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      role: { allowNull: false,
+      role: { 
+        allowNull: false,
         type: Sequelize.STRING,
       },
     }, {

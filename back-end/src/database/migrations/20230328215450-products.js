@@ -17,6 +17,7 @@ module.exports = {
       },
       url_image: {
         allowNull: false,
+        field: 'url_image',
         type: Sequelize.STRING,
       },
     }, {
