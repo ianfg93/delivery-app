@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import MyContext from '../context/Context';
 
 const COMMON = 'common_login';
 const MAIL = 'input-email';
@@ -11,15 +12,24 @@ const PASS_MIN_LENGTH = 6;
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login, isHidden } = useContext(MyContext);
 
   const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
   const passRegex = () => password.length >= PASS_MIN_LENGTH;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await login(email, password);
+  };
 
   return (
     <div>
       <div>Logo</div>
       <h1>Nome do App</h1>
-      <form action="post">
+      <form
+        action="post"
+        onSubmit={ (e) => handleSubmit(e) }
+      >
         <label htmlFor="inputMail">
           Login:
           <input
@@ -50,8 +60,8 @@ export default function Login() {
         <button type="button" data-testid={ `${COMMON}__${REGISTER}` }>
           Ainda não tenho conta
         </button>
-        <small data-testid={ `${COMMON}__${INVALID}` }>
-          Usuario invalido
+        <small data-testid={ `${COMMON}__${INVALID}` } hidden={ isHidden }>
+          Email ou senha invalido.
         </small>
       </form>
     </div>
