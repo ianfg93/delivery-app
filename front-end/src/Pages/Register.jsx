@@ -6,11 +6,17 @@ const MAIL = 'input-email';
 const PASS = 'input-password';
 const REGISTER = 'button-register';
 const INVALID = 'element-invalid-register';
+const PASS_MIN_LENGTH = 6;
+const NAME_MIN_LENGTH = 12;
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
+  const passRegex = () => password.length >= PASS_MIN_LENGTH;
+  const nameRegex = () => name.length >= NAME_MIN_LENGTH;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,6 +62,7 @@ export default function Register() {
         <button
           type="submit"
           data-testid={ `${COMMON}__${REGISTER}` }
+          disabled={ !(emailRegex() && passRegex() && nameRegex()) }
         >
           CADASTRAR
         </button>
