@@ -6,7 +6,7 @@ const MAIL = 'input-email';
 const PASS = 'input-password';
 const LOGIN = 'button-login';
 const REGISTER = 'button-register';
-const INVALID = 'element-invalid-email';
+const INVALID = 'element-invalid_register';
 const PASS_MIN_LENGTH = 6;
 
 export default function Login() {
