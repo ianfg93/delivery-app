@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 
 import MyContext from './Context';
@@ -8,6 +9,8 @@ function Provider({ children }) {
   const [loading, setLoading] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
 
+  const navigate = useNavigate();
+
   const value = useMemo(() => ({
     loading,
     isHidden,
@@ -16,12 +19,11 @@ function Provider({ children }) {
     },
     async login(email, password) {
       try {
-        const status = await DB('post', '/user', {
+        await DB('post', '/user', {
           email,
           password,
         });
-        console.log(status.data);
-        return status;
+        return navigate('/customer/products');
       } catch (err) {
         setIsHidden(false);
         return new Error(err);
@@ -30,6 +32,7 @@ function Provider({ children }) {
   }), [
     loading,
     isHidden,
+    navigate,
   ]);
 
   return (
