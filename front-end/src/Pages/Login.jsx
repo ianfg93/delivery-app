@@ -12,7 +12,7 @@ const PASS_MIN_LENGTH = 6;
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isHidden } = useContext(MyContext);
+  const { login, isHidden, navigate } = useContext(MyContext);
 
   const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
   const passRegex = () => password.length >= PASS_MIN_LENGTH;
@@ -57,7 +57,11 @@ export default function Login() {
         >
           Login
         </button>
-        <button type="button" data-testid={ `${COMMON}__${REGISTER}` }>
+        <button
+          type="button"
+          data-testid={ `${COMMON}__${REGISTER}` }
+          onClick={ () => navigate('/register') }
+        >
           Ainda não tenho conta
         </button>
         <small data-testid={ `${COMMON}__${INVALID}` } hidden={ isHidden }>

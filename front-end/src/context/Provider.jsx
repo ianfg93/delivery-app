@@ -14,6 +14,7 @@ function Provider({ children }) {
   const value = useMemo(() => ({
     loading,
     isHidden,
+    navigate,
     changeLoadingState() {
       setLoading(!loading);
     },
