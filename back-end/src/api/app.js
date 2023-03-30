@@ -6,6 +6,7 @@ const { findAllProductsController } = require('./controllers/ProductController')
 const app = express();
 
 app.use(express.json());
+app.use(express.static('public')); //! arquivos estáticos;
 app.use(cors({
   origin: 'http://localhost:3000',
 }));

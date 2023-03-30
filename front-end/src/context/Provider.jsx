@@ -9,6 +9,7 @@ function Provider({ children }) {
   const [loading, setLoading] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
   const [haveConflict, setHaveConflict] = useState(true);
+  const [products, setProducts] = useState([]);
 
   const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ function Provider({ children }) {
     loading,
     isHidden,
     haveConflict,
+    products,
     navigate,
     changeLoadingState() {
       setLoading(!loading);
@@ -45,11 +47,21 @@ function Provider({ children }) {
         return new Error(err);
       }
     },
+
+    async getProducts() {
+      try {
+        const response = await DB('get', '/products');
+        return setProducts(response.data);
+      } catch (err) {
+        return new Error(err);
+      }
+    },
   }), [
     loading,
     isHidden,
     navigate,
     haveConflict,
+    products,
   ]);
 
   return (
