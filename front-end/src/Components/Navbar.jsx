@@ -10,22 +10,22 @@ function Navbar() {
     <nav className="navbar">
       <ul>
         <li>
-          <a href="/products" data-testid={ `${PRODUCT}` }>
+          <a href="/products" data-testid={ PRODUCT }>
             Produtos
           </a>
         </li>
         <li>
-          <a href="/orders" data-testid={ `${ORDER}` }>
+          <a href="/orders" data-testid={ ORDER }>
             Meus Pedidos
           </a>
         </li>
         <li>
-          <a href="/user" data-testid={ `${USER}` }>
+          <a href="/user" data-testid={ USER }>
             Usuário
           </a>
         </li>
         <li>
-          <a href="/user" data-testid={ `${LOGOUT}` }>
+          <a href="/user" data-testid={ LOGOUT }>
             Sair
           </a>
         </li>
