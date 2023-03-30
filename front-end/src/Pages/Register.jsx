@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import MyContext from '../context/Context';
 
 const COMMON = 'common_register';
 const NAME = 'input-name';
 const MAIL = 'input-email';
 const PASS = 'input-password';
 const REGISTER = 'button-register';
-const INVALID = 'element-invalid-register';
+const INVALID = 'element-invalid_register';
 const PASS_MIN_LENGTH = 6;
 const NAME_MIN_LENGTH = 12;
 
@@ -13,13 +14,15 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { haveConflict, register } = useContext(MyContext);
 
   const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
   const passRegex = () => password.length >= PASS_MIN_LENGTH;
   const nameRegex = () => name.length >= NAME_MIN_LENGTH;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    await register(email, password, name);
   };
 
   return (
@@ -69,6 +72,7 @@ export default function Register() {
       </form>
       <small
         data-testid={ `${COMMON}__${INVALID}` }
+        hidden={ haveConflict }
       >
         Campos invalidos ou faltando
       </small>

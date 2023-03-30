@@ -8,12 +8,14 @@ import DB from '../utils/conection';
 function Provider({ children }) {
   const [loading, setLoading] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
+  const [haveConflict, setHaveConflict] = useState(true);
 
   const navigate = useNavigate();
 
   const value = useMemo(() => ({
     loading,
     isHidden,
+    haveConflict,
     navigate,
     changeLoadingState() {
       setLoading(!loading);
@@ -30,10 +32,24 @@ function Provider({ children }) {
         return new Error(err);
       }
     },
+    async register(email, password, name) {
+      try {
+        await DB('post', '/register', {
+          email,
+          password,
+          name,
+        });
+        return navigate('/customer/products');
+      } catch (err) {
+        setHaveConflict(false);
+        return new Error(err);
+      }
+    },
   }), [
     loading,
     isHidden,
     navigate,
+    haveConflict,
   ]);
 
   return (
