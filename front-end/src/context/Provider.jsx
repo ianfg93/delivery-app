@@ -59,9 +59,9 @@ function Provider({ children }) {
   }), [
     loading,
     isHidden,
-    navigate,
     haveConflict,
     products,
+    navigate,
   ]);
 
   return (
