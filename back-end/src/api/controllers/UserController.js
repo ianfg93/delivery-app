@@ -1,4 +1,5 @@
 const { encrypt } = require('../middlewares/encrypt');
+const { generateToken } = require('../middlewares/JWTgenerate');
 const { autenticateUser, createUser } = require('../services/userService');
 
 const getUser = async (req, res) => {
@@ -6,7 +7,8 @@ const getUser = async (req, res) => {
   if (!email || !password) return res.status(404).end();
   const user = await autenticateUser(email, encrypt(password));
   if (!user) return res.status(404).json({ message: 'Invalid email or password!' });
-  res.status(200).json({ message: 'Sucessful request' });
+  const token = await generateToken(user);
+  res.status(200).json({ ...user.dataValues, token });
 };
 
 const create = async (req, res) => {

@@ -24,10 +24,11 @@ function Provider({ children }) {
     },
     async login(email, password) {
       try {
-        await DB('post', '/user', {
+        const response = await DB('post', '/user', {
           email,
           password,
         });
+        localStorage.setItem('user', JSON.stringify(response.data));
         return navigate('/customer/products');
       } catch (err) {
         setIsHidden(false);
