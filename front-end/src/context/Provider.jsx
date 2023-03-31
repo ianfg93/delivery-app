@@ -10,6 +10,7 @@ function Provider({ children }) {
   const [isHidden, setIsHidden] = useState(true);
   const [haveConflict, setHaveConflict] = useState(true);
   const [products, setProducts] = useState([]);
+  const [cartTotal, setCartTotal] = useState([0]);
 
   const navigate = useNavigate();
 
@@ -18,9 +19,13 @@ function Provider({ children }) {
     isHidden,
     haveConflict,
     products,
+    cartTotal,
     navigate,
     changeLoadingState() {
       setLoading(!loading);
+    },
+    updateCartTotal(total) {
+      setCartTotal(total.reduce((a, c) => a + c).toFixed(2).replace('.', ','));
     },
     async login(email, password) {
       try {
@@ -62,6 +67,7 @@ function Provider({ children }) {
     isHidden,
     haveConflict,
     products,
+    cartTotal,
     navigate,
   ]);
 

@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import MyContext from '../context/Context';
+
+const total = [];
 
 export default function Card({ product }) {
   const { name, id, urlImage, price } = product;
+  const { updateCartTotal } = useContext(MyContext);
   const [quantity, setQuantity] = useState(Number(0));
+  const [totalPrice, setTotalPrice] = useState(Number(0));
+
+  useEffect(() => {
+    total.splice((id - 1), 1, totalPrice);
+    setTotalPrice(quantity * Number(price));
+    updateCartTotal(total);
+  });
+
   return (
     <div>
       <h2
@@ -21,8 +33,8 @@ export default function Card({ product }) {
       <p
         data-testid={ `customer_products__element-card-price-${id}` }
       >
+        R$:
         { price.replace('.', ',') }
-
       </p>
       <div>
         <button

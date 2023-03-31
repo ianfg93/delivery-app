@@ -3,16 +3,8 @@ import Card from '../Components/Card';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
-// const COMMON = 'customer_products';
-// const CARD = 'element-card-price';
-// const IMG = 'img-card-bg-image';
-// const ELEMENT = 'img-card-title';
-// const QUANTITY = 'input-card-quantity';
-// const ADDITEM = 'button-card-add-item';
-// const REMOVEITEM = 'button-card-rm-item';
-
 function Products() {
-  const { products, getProducts } = useContext(MyContext);
+  const { products, getProducts, cartTotal } = useContext(MyContext);
   useEffect(() => {
     getProducts(products);
   }, []);
@@ -23,6 +15,18 @@ function Products() {
       <div>
         { products.map((product) => <Card key={ product.id } product={ product } />) }
       </div>
+      <button
+        type="button"
+        data-testid="customer_products__button-cart"
+      >
+        Ver carrinho: R$
+        {' '}
+        <span
+          data-testid="customer_products__checkout-bottom-value"
+        >
+          { cartTotal }
+        </span>
+      </button>
     </div>
   );
 }
