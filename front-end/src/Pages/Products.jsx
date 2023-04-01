@@ -1,9 +1,11 @@
 import React, { useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
 function Products() {
+  const navigate = useNavigate();
   const { products, getProducts, cartTotal } = useContext(MyContext);
   useEffect(() => {
     getProducts(products);
@@ -18,6 +20,8 @@ function Products() {
       <button
         type="button"
         data-testid="customer_products__button-cart"
+        onClick={ () => navigate('/customer/checkout') }
+        disabled={ cartTotal === '0,00' }
       >
         Ver carrinho: R$
         {' '}
