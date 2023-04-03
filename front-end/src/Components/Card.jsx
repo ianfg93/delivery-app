@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from '../context/Context';
 
+
 const total = [];
 
 export default function Card({ product }) {
   const { name, id, urlImage, price } = product;
-  const { updateCartTotal } = useContext(MyContext);
+  const { updateCartTotal, updateCartQuantities } = useContext(MyContext);
   const [quantity, setQuantity] = useState(Number(0));
   const [totalPrice, setTotalPrice] = useState(Number(0));
 
@@ -14,6 +15,7 @@ export default function Card({ product }) {
     total.splice((id - 1), 1, totalPrice);
     setTotalPrice(quantity * Number(price));
     updateCartTotal(total);
+    updateCartQuantities({ id, quantity, name, price });
   });
 
   return (
@@ -40,6 +42,7 @@ export default function Card({ product }) {
         <button
           data-testid={ `customer_products__button-card-add-item-${id}` }
           type="button"
+          name={ name }
           onClick={ () => quantity >= 0 && setQuantity(quantity + 1) }
         >
           +
