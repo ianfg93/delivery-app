@@ -30,12 +30,11 @@ function Provider({ children }) {
       setCartTotal(total.reduce((a, c) => a + c).toFixed(2).replace('.', ','));
     },
     updateCartQuantities(product) {
-      
       const copyCartQuantities = cartQuantities.filter((obj) => obj.id !== product.id);
       if (product.quantity === 0) {
         return setCartQuantities(copyCartQuantities);
       }
-      copyCartQuantities.push(product)
+      copyCartQuantities.push(product);
       return setCartQuantities(copyCartQuantities);
     },
     async login(email, password) {

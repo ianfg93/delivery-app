@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
@@ -15,7 +15,19 @@ const NUMBER = 'customer_checkout__input-address-number';
 const SUBMIT = 'customer_checkout__button-submit-order';
 
 function Checkout() {
-  const { cartTotal, cartQuantities } = useContext(MyContext);
+  const { cartTotal, cartQuantities, updateCartTotal } = useContext(MyContext);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  useEffect(() => {
+    setSelectedProducts([...cartQuantities]);
+  }, [cartQuantities]);
+
+  const handleClick = (index, product) => {
+    const total = +cartTotal.replace(',', '.');
+    const finalPrice = total - (+product.price * product.quantity);
+    updateCartTotal([finalPrice]);
+    setSelectedProducts(selectedProducts.filter((_, i) => i !== index));
+  };
 
   return (
     <div>
@@ -33,7 +45,7 @@ function Checkout() {
           </tr>
         </thead>
         <tbody>
-          {cartQuantities.map((product, index) => (
+          {selectedProducts.map((product, index) => (
             <tr key={ product.productId }>
               <td data-testid={ `${ITEM}${index}` }>{index + 1}</td>
               <td data-testid={ `${DESCRIPTION}${index}` }>{product.name}</td>
@@ -45,7 +57,12 @@ function Checkout() {
                 {(product.price * product.quantity).toFixed(2).replace('.', ',')}
               </td>
               <td data-testid={ `${REMOVE}${index}` }>
-                <button type="button">Remover</button>
+                <button
+                  type="button"
+                  onClick={ () => handleClick(index, product) }
+                >
+                  Remover
+                </button>
               </td>
             </tr>
           ))}

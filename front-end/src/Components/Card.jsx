@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from '../context/Context';
 
-
 const total = [];
 
 export default function Card({ product }) {
