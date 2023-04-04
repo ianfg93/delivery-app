@@ -6,7 +6,7 @@ const total = [];
 
 export default function Card({ product }) {
   const { name, id, urlImage, price } = product;
-  const { updateCartTotal, updateCartQuantities } = useContext(MyContext);
+  const { updateCartTotal } = useContext(MyContext);
   const [quantity, setQuantity] = useState(Number(0));
   const [totalPrice, setTotalPrice] = useState(Number(0));
 
@@ -14,7 +14,6 @@ export default function Card({ product }) {
     total.splice((id - 1), 1, totalPrice);
     setTotalPrice(quantity * Number(price));
     updateCartTotal(total);
-    updateCartQuantities({ id, quantity, name, price });
   });
 
   return (
