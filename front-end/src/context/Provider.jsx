@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
@@ -14,6 +15,23 @@ function Provider({ children }) {
 
   const navigate = useNavigate();
 
+  function updateCartQuantities(product) {
+    const copyCartQuantities = cartQuantities.filter((obj) => obj.id !== product.id);
+    if (product.quantity === 0) {
+      return setCartQuantities(copyCartQuantities);
+    }
+    copyCartQuantities.push(product);
+    return setCartQuantities(copyCartQuantities);
+  }
+
+  function changeLoadingState() {
+    setLoading(!loading);
+  }
+
+  function updateCartTotal(total) {
+    setCartTotal(total.reduce((a, c) => a + c).toFixed(2).replace('.', ','));
+  }
+
   const value = useMemo(() => ({
     loading,
     isHidden,
@@ -23,26 +41,12 @@ function Provider({ children }) {
     navigate,
     cartQuantities,
     setCartQuantities,
-    changeLoadingState() {
-      setLoading(!loading);
-    },
-    updateCartTotal(total) {
-      setCartTotal(total.reduce((a, c) => a + c).toFixed(2).replace('.', ','));
-    },
-    updateCartQuantities(product) {
-      const copyCartQuantities = cartQuantities.filter((obj) => obj.id !== product.id);
-      if (product.quantity === 0) {
-        return setCartQuantities(copyCartQuantities);
-      }
-      copyCartQuantities.push(product);
-      return setCartQuantities(copyCartQuantities);
-    },
+    updateCartQuantities,
+    changeLoadingState,
+    updateCartTotal,
     async login(email, password) {
       try {
-        const response = await DB('post', '/user', {
-          email,
-          password,
-        });
+        const response = await DB('post', '/user', { email, password });
         localStorage.setItem('user', JSON.stringify(response.data));
         return navigate('/customer/products');
       } catch (err) {
@@ -63,7 +67,6 @@ function Provider({ children }) {
         return new Error(err);
       }
     },
-
     async getProducts() {
       try {
         const response = await DB('get', '/products');
@@ -79,6 +82,9 @@ function Provider({ children }) {
     products,
     cartTotal,
     navigate,
+    cartQuantities,
+    changeLoadingState,
+    updateCartQuantities,
   ]);
 
   return (
