@@ -2,12 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from '../context/Context';
 
-
 const total = [];
 
 export default function Card({ product }) {
   const { name, id, urlImage, price } = product;
-  const { updateCartTotal, updateCartQuantities } = useContext(MyContext);
+  const { updateCartTotal, updateCartQuantities, cartQuantities } = useContext(MyContext);
   const [quantity, setQuantity] = useState(Number(0));
   const [totalPrice, setTotalPrice] = useState(Number(0));
 
@@ -15,16 +14,19 @@ export default function Card({ product }) {
     total.splice((id - 1), 1, totalPrice);
     setTotalPrice(quantity * Number(price));
     updateCartTotal(total);
-    updateCartQuantities({ id, quantity, name, price });
   });
+
+  function update(attQuantity) {
+    updateCartQuantities({ quantity: attQuantity, id });
+  }
 
   return (
     <div>
+      { console.log(cartQuantities) }
       <h2
         data-testid={ `customer_products__element-card-title-${id}` }
       >
         { name }
-
       </h2>
       <img
         data-testid={ `customer_products__img-card-bg-image-${id}` }
@@ -43,7 +45,10 @@ export default function Card({ product }) {
           data-testid={ `customer_products__button-card-add-item-${id}` }
           type="button"
           name={ name }
-          onClick={ () => quantity >= 0 && setQuantity(quantity + 1) }
+          onClick={ () => {
+            if (quantity >= 0) setQuantity(quantity + 1);
+            update(quantity + 1);
+          } }
         >
           +
         </button>
@@ -56,7 +61,10 @@ export default function Card({ product }) {
         <button
           data-testid={ `customer_products__button-card-rm-item-${id}` }
           type="button"
-          onClick={ () => quantity > 0 && setQuantity(quantity - 1) }
+          onClick={ () => {
+            if (quantity > 0) setQuantity(quantity - 1);
+            update(quantity - 1);
+          } }
         >
           -
         </button>
