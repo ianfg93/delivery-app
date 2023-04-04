@@ -20,7 +20,7 @@ module.exports = {
       },
       sellerId: {
         allowNull: false,
-        field: 'user_id',
+        field: 'seller_id',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
@@ -51,7 +51,7 @@ module.exports = {
       },
       status: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
     }, {
       timestamps: false,

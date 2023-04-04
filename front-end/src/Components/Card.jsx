@@ -6,7 +6,7 @@ const total = [];
 
 export default function Card({ product }) {
   const { name, id, urlImage, price } = product;
-  const { updateCartTotal, updateCartQuantities, cartQuantities } = useContext(MyContext);
+  const { updateCartTotal, updateCartQuantities } = useContext(MyContext);
   const [quantity, setQuantity] = useState(Number(0));
   const [totalPrice, setTotalPrice] = useState(Number(0));
 
@@ -22,7 +22,6 @@ export default function Card({ product }) {
 
   return (
     <div>
-      { console.log(cartQuantities) }
       <h2
         data-testid={ `customer_products__element-card-title-${id}` }
       >
