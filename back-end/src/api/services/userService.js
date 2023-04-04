@@ -1,6 +1,11 @@
 const { Op } = require('sequelize');
 const { User } = require('../../database/models');
 
+const findSellers = async () => {
+  const users = await User.findAll({ where: { role: 'seller' } });
+  return users;
+};
+
 const autenticateUser = async (email, password) => {
   const user = await User.findOne(
     { where: { email, password },
@@ -27,4 +32,5 @@ const createUser = async (name, email, password) => {
 module.exports = {
   autenticateUser,
   createUser,
+  findSellers,
 };

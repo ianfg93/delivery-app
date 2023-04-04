@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
@@ -15,19 +15,26 @@ const NUMBER = 'customer_checkout__input-address-number';
 const SUBMIT = 'customer_checkout__button-submit-order';
 
 function Checkout() {
-  const { cartTotal, cartQuantities, updateCartTotal } = useContext(MyContext);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const {
+    cartTotal,
+    cartQuantities,
+    setCartTotal,
+    setCartQuantities,
+    getSellers,
+    sellers,
+    products } = useContext(MyContext);
+
+  function remove(id, price) {
+    const newCartQuantities = cartQuantities.filter((obj) => obj.id !== id);
+    setCartQuantities(newCartQuantities);
+    setCartTotal(Number(
+      Number(cartTotal.replace(',', '.')) - price,
+    ).toFixed(2).replace('.', ','));
+  }
 
   useEffect(() => {
-    setSelectedProducts([...cartQuantities]);
-  }, [cartQuantities]);
-
-  const handleClick = (index, product) => {
-    const total = +cartTotal.replace(',', '.');
-    const finalPrice = total - (+product.price * product.quantity);
-    updateCartTotal([finalPrice]);
-    setSelectedProducts(selectedProducts.filter((_, i) => i !== index));
-  };
+    getSellers();
+  }, []);
 
   return (
     <div>
@@ -45,34 +52,47 @@ function Checkout() {
           </tr>
         </thead>
         <tbody>
-          {selectedProducts.map((product, index) => (
-            <tr key={ product.productId }>
+          { cartQuantities.length > 0 ? cartQuantities.map((product, index) => (
+            <tr key={ product.id }>
               <td data-testid={ `${ITEM}${index}` }>{index + 1}</td>
-              <td data-testid={ `${DESCRIPTION}${index}` }>{product.name}</td>
+              <td data-testid={ `${DESCRIPTION}${index}` }>
+                { products.find(((p) => p.id === product.id)).name }
+              </td>
               <td data-testid={ `${QUANTITY}${index}` }>{product.quantity}</td>
               <td data-testid={ `${PRICE}${index}` }>
-                {product.price.replace('.', ',')}
+                {products.find(((p) => p.id === product.id)).price.replace('.', ',')}
               </td>
               <td data-testid={ `${SUBTOTAL}${index}` }>
-                {(product.price * product.quantity).toFixed(2).replace('.', ',')}
+                {(products.find(((p) => p.id === product.id)).price * product.quantity)
+                  .toFixed(2).replace('.', ',')}
               </td>
               <td data-testid={ `${REMOVE}${index}` }>
                 <button
                   type="button"
-                  onClick={ () => handleClick(index, product) }
+                  onClick={ () => remove(product.id, (products
+                    .find(((p) => p.id === product.id)).price * product.quantity)) }
                 >
                   Remover
                 </button>
               </td>
             </tr>
-          ))}
+          )) : <div> Carrinho vazio </div>}
         </tbody>
       </table>
       <p data-testid={ TOTALPRICE }>
         {cartTotal}
       </p>
       <div>
-        <select data-testid={ SELLER }><option value="Ze">Zé</option></select>
+        <select data-testid={ SELLER }>
+          { sellers.map((seller) => (
+            <option
+              key={ seller.id }
+              value={ seller.id }
+            >
+              { seller.name }
+            </option>
+          ))}
+        </select>
         <input type="text" data-testid={ ADDRESS } />
         Endereço
         <input type="number" data-testid={ NUMBER } />

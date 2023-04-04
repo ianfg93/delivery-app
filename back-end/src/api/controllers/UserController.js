@@ -1,6 +1,6 @@
 const { encrypt } = require('../middlewares/encrypt');
 const { generateToken } = require('../middlewares/JWTgenerate');
-const { autenticateUser, createUser } = require('../services/userService');
+const { autenticateUser, createUser, findSellers } = require('../services/userService');
 
 const getUser = async (req, res) => {
   const { email, password } = req.body;
@@ -21,7 +21,13 @@ const create = async (req, res) => {
     return res.status(201).json(user);
 };
 
+const getSeller = async (_req, res) => {
+  const users = await findSellers();
+  return res.status(201).json(users);
+};
+
 module.exports = {
   getUser,
   create,
+  getSeller,
 };

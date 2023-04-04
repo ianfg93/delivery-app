@@ -8,7 +8,7 @@ function Products() {
   const navigate = useNavigate();
   const { products, getProducts, cartTotal } = useContext(MyContext);
   useEffect(() => {
-    getProducts(products);
+    getProducts();
   }, []);
 
   return (

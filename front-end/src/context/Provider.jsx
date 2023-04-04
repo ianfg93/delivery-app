@@ -12,6 +12,7 @@ function Provider({ children }) {
   const [products, setProducts] = useState([]);
   const [cartTotal, setCartTotal] = useState([0]);
   const [cartQuantities, setCartQuantities] = useState([]);
+  const [sellers, setSellers] = useState([]);
 
   const navigate = useNavigate();
 
@@ -32,57 +33,71 @@ function Provider({ children }) {
     setCartTotal(total.reduce((a, c) => a + c).toFixed(2).replace('.', ','));
   }
 
+  async function login(email, password) {
+    try {
+      const response = await DB('post', '/user', { email, password });
+      localStorage.setItem('user', JSON.stringify(response.data));
+      return navigate('/customer/products');
+    } catch (err) {
+      setIsHidden(false);
+      return new Error(err);
+    }
+  }
+
+  async function register(email, password, name) {
+    try {
+      await DB('post', '/register', { email, password, name });
+      return navigate('/customer/products');
+    } catch (err) {
+      setHaveConflict(false);
+      return new Error(err);
+    }
+  }
+
+  async function getProducts() {
+    try {
+      const response = await DB('get', '/products');
+      return setProducts(response.data);
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
+  async function getSellers() {
+    try {
+      const response = await DB('get', '/user/sellers');
+      return setSellers(response.data);
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
   const value = useMemo(() => ({
     loading,
     isHidden,
     haveConflict,
     products,
     cartTotal,
-    navigate,
     cartQuantities,
+    sellers,
+    setCartTotal,
+    navigate,
     setCartQuantities,
     updateCartQuantities,
     changeLoadingState,
     updateCartTotal,
-    async login(email, password) {
-      try {
-        const response = await DB('post', '/user', { email, password });
-        localStorage.setItem('user', JSON.stringify(response.data));
-        return navigate('/customer/products');
-      } catch (err) {
-        setIsHidden(false);
-        return new Error(err);
-      }
-    },
-    async register(email, password, name) {
-      try {
-        await DB('post', '/register', {
-          email,
-          password,
-          name,
-        });
-        return navigate('/customer/products');
-      } catch (err) {
-        setHaveConflict(false);
-        return new Error(err);
-      }
-    },
-    async getProducts() {
-      try {
-        const response = await DB('get', '/products');
-        return setProducts(response.data);
-      } catch (err) {
-        return new Error(err);
-      }
-    },
+    getProducts,
+    login,
+    register,
+    getSellers,
   }), [
     loading,
     isHidden,
     haveConflict,
     products,
     cartTotal,
-    navigate,
     cartQuantities,
+    navigate,
     changeLoadingState,
     updateCartQuantities,
   ]);
