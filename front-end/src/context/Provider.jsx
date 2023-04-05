@@ -74,6 +74,15 @@ function Provider({ children }) {
     }
   }
 
+  async function getOrderDetails(id) {
+    try {
+      const response = await DB('get', `/sale/details/${id}`);
+      return response.data;
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
   async function getProducts() {
     try {
       const response = await DB('get', '/products');
@@ -101,6 +110,7 @@ function Provider({ children }) {
     cartQuantities,
     sellers,
     orders,
+    getOrderDetails,
     setCartTotal,
     navigate,
     setCartQuantities,
