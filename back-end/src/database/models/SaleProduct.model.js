@@ -6,7 +6,7 @@ const SaleProductModel = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-      tableName: 'sale_products',
+      tableName: 'sales_products',
       underscored: true,
     });
   

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
@@ -20,13 +20,14 @@ function Checkout() {
     cartQuantities,
     setCartTotal,
     setCartQuantities,
+    getSellers,
     sellers,
     products,
     finishPurchase } = useContext(MyContext);
 
   const [adress, setAdress] = useState('');
   const [adressNumber, setAdressNumber] = useState();
-  const [selection, setSelection] = useState(sellers[0].id);
+  const [selection, setSelection] = useState();
 
   const remove = (id, price) => {
     const newCartQuantities = cartQuantities.filter((obj) => obj.id !== id);
@@ -36,6 +37,10 @@ function Checkout() {
     ).toFixed(2).replace('.', ','));
   };
 
+  useEffect(() => {
+    getSellers();
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     finishPurchase({
@@ -43,7 +48,7 @@ function Checkout() {
       userId: JSON.parse(localStorage.getItem('user')).id,
       totalPrice: Number(cartTotal.replace(',', '.')),
       deliveryAddress: adress,
-      deliveryNumber: adressNumber,
+      deliveryNumber: Number(adressNumber),
       saledProducts: cartQuantities.map((product) => {
         const newObj = {
           productId: product.id,
@@ -112,12 +117,13 @@ function Checkout() {
           onInput={ ({ target: { value } }) => setSelection(value) }
           required
         >
+          <option disabled selected value> Selecione o vendedor </option>
           { sellers.map((seller) => (
             <option
               key={ seller.id }
               value={ seller.id }
             >
-              { seller.id }
+              { seller.name }
             </option>
           ))}
         </select>
