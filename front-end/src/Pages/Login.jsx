@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import MyContext from '../context/Context';
 
 const COMMON = 'common_login';
@@ -12,7 +12,14 @@ const PASS_MIN_LENGTH = 6;
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userLoged, setUserLoged] = useState(false);
   const { login, isHidden, navigate } = useContext(MyContext);
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      setUserLoged(true);
+    }
+  }, []);
 
   const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
   const passRegex = () => password.length >= PASS_MIN_LENGTH;
@@ -25,6 +32,7 @@ export default function Login() {
   return (
     <div>
       <div>Logo</div>
+      { userLoged && navigate('/customer/products') }
       <h1>Nome do App</h1>
       <form
         action="post"

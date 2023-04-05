@@ -1,4 +1,5 @@
-const { createSale, createSaleProducts } = require('../services/salesService');
+const { createSale,
+  createSaleProducts, getSalesByUserId, findSaleById } = require('../services/salesService');
 
 const createNewSale = async (req, res) => {
   const {
@@ -23,6 +24,24 @@ const createNewSale = async (req, res) => {
   res.status(201).json({ id: sale });
 };
 
+const getSale = async (req, res) => {
+  const { id } = req.params;
+  const sales = await getSalesByUserId(id);
+  res.status(200).json(sales);
+};
+
+const getSaleById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const sale = await findSaleById(id);
+    return res.status(200).json(sale);
+  } catch (err) {
+    return res.status(404).end();
+  }
+};
+
 module.exports = {
   createNewSale,
+  getSale,
+  getSaleById,
 };
