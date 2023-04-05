@@ -13,6 +13,7 @@ function Provider({ children }) {
   const [cartTotal, setCartTotal] = useState([0]);
   const [cartQuantities, setCartQuantities] = useState([]);
   const [sellers, setSellers] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
 
@@ -56,10 +57,18 @@ function Provider({ children }) {
 
   async function finishPurchase(purchase) {
     try {
-      console.log(purchase);
       const response = await DB('post', '/sale', { ...purchase }, JSON
         .parse(localStorage.getItem('user')).token);
       return navigate(`/customer/orders/${response.data.id}`);
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
+  async function getOrders(id) {
+    try {
+      const response = await DB('get', `/sale/${id}`);
+      setOrders(response.data);
     } catch (err) {
       return new Error(err);
     }
@@ -91,6 +100,7 @@ function Provider({ children }) {
     cartTotal,
     cartQuantities,
     sellers,
+    orders,
     setCartTotal,
     navigate,
     setCartQuantities,
@@ -102,6 +112,7 @@ function Provider({ children }) {
     register,
     getSellers,
     finishPurchase,
+    getOrders,
   }), [
     loading,
     isHidden,

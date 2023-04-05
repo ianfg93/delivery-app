@@ -12,13 +12,13 @@ function Navbar() {
   }, []);
   return (
     <nav className="navbar">
-      <a href="/products" data-testid={ PRODUCT }>
+      <a href="/customer/products" data-testid={ PRODUCT }>
         Produtos
       </a>
-      <a href="/orders" data-testid={ ORDER }>
+      <a href="/customer/orders" data-testid={ ORDER }>
         Meus Pedidos
       </a>
-      <a href="/user" data-testid={ USER }>
+      <a href="/login" data-testid={ USER }>
         { user.name }
       </a>
 
