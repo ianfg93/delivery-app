@@ -35,14 +35,15 @@ export default function Orders() {
               <p
                 data-testid={ `customer_orders__element-order-date-${order.id}` }
               >
-                { order.saleDate }
+                { `${String(new Date(order.saleDate)
+                  .getUTCDate()).padStart(2, '0')}/${String(new Date(order.saleDate)
+                  .getUTCMonth() + 1).padStart(2, '0')}/${new Date(order.saleDate)
+                  .getFullYear()}` }
               </p>
               <p
                 data-testid={ `customer_orders__element-card-price-${order.id}` }
               >
-                R$:
-                {' '}
-                { order.totalPrice }
+                { String(order.totalPrice).replace('.', ',') }
               </p>
             </div>
           </button>

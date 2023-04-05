@@ -11,6 +11,9 @@ const SaleProductModel = (sequelize, DataTypes) => {
       underscored: true,
     });
   
+    SaleProduct.associate = (model) => {
+      SaleProduct.belongsTo(model.Product, { foreignKey: 'productId', as: 'product' })
+    }
     return SaleProduct;
   };
 

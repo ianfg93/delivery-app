@@ -1,4 +1,4 @@
-const { Sale, SaleProduct, User } = require('../../database/models');
+const { Sale, SaleProduct, User, Product } = require('../../database/models');
 
 const createSale = async (body) => {
   const sale = await Sale.create({ ...body });
@@ -26,7 +26,12 @@ const findSaleById = async (id) => {
   try {
     const sale = await Sale.findByPk(id, {
       include: [
-        { model: SaleProduct, as: 'products' },
+        { model: SaleProduct,
+          as: 'products',
+          include: [
+            { model: Product, as: 'product' },
+          ],
+        },
         { model: User, as: 'seller' },
       ],
     });
