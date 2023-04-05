@@ -10,10 +10,22 @@ const createSaleProducts = async (saleId, saledProds) => {
   return sale;
 };
 
-const getSalesByUserId = async (saleId) => {
+const getSalesByUserId = async (id) => {
   const sale = Sale.findAll(
     {
-      where: { userId: saleId },
+      where: { userId: id },
+      include: [
+        { model: SaleProduct, as: 'products' },
+      ],
+    },
+  );
+  return sale;
+};
+
+const getSalesBySellerId = async (id) => {
+  const sale = Sale.findAll(
+    {
+      where: { sellerId: id },
       include: [
         { model: SaleProduct, as: 'products' },
       ],
@@ -35,6 +47,7 @@ const findSaleById = async (id) => {
         { model: User, as: 'seller' },
       ],
     });
+    console.log(sale);
     return sale;
   } catch (err) {
     throw new Error();
@@ -45,5 +58,6 @@ module.exports = {
   createSale,
   createSaleProducts,
   getSalesByUserId,
+  getSalesBySellerId,
   findSaleById,
 };
