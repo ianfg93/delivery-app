@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
 import MyContext from '../context/Context';
 
@@ -22,19 +22,42 @@ function Checkout() {
     setCartQuantities,
     getSellers,
     sellers,
-    products } = useContext(MyContext);
+    products,
+    finishPurchase } = useContext(MyContext);
 
-  function remove(id, price) {
+  const [adress, setAdress] = useState('');
+  const [adressNumber, setAdressNumber] = useState();
+  const [selection, setSelection] = useState();
+
+  const remove = (id, price) => {
     const newCartQuantities = cartQuantities.filter((obj) => obj.id !== id);
     setCartQuantities(newCartQuantities);
     setCartTotal(Number(
       Number(cartTotal.replace(',', '.')) - price,
     ).toFixed(2).replace('.', ','));
-  }
+  };
 
   useEffect(() => {
     getSellers();
   }, []);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    finishPurchase({
+      sellerId: Number(selection),
+      userId: JSON.parse(localStorage.getItem('user')).id,
+      totalPrice: Number(cartTotal.replace(',', '.')),
+      deliveryAddress: adress,
+      deliveryNumber: Number(adressNumber),
+      saledProducts: cartQuantities.map((product) => {
+        const newObj = {
+          productId: product.id,
+          quantity: product.quantity,
+        };
+        return { ...newObj };
+      }),
+    });
+  };
 
   return (
     <div>
@@ -80,10 +103,21 @@ function Checkout() {
         </tbody>
       </table>
       <p data-testid={ TOTALPRICE }>
+        Total do pedido:
+        {' '}
         {cartTotal}
       </p>
-      <div>
-        <select data-testid={ SELLER }>
+      <form
+        action="post"
+        onSubmit={ (event) => handleSubmit(event) }
+      >
+        <select
+          data-testid={ SELLER }
+          value={ selection }
+          onInput={ ({ target: { value } }) => setSelection(value) }
+          required
+        >
+          <option disabled selected value> Selecione o vendedor </option>
           { sellers.map((seller) => (
             <option
               key={ seller.id }
@@ -93,12 +127,29 @@ function Checkout() {
             </option>
           ))}
         </select>
-        <input type="text" data-testid={ ADDRESS } />
-        Endereço
-        <input type="number" data-testid={ NUMBER } />
-        Número
-        <button type="button" data-testid={ SUBMIT }>FINALIZAR PEDIDO</button>
-      </div>
+        Endereço:
+        <input
+          type="text"
+          data-testid={ ADDRESS }
+          onInput={ ({ target: { value } }) => setAdress(value) }
+          value={ adress }
+          required
+        />
+        Número:
+        <input
+          type="number"
+          data-testid={ NUMBER }
+          value={ adressNumber }
+          onInput={ ({ target: { value } }) => value >= 0 && setAdressNumber(value) }
+          required
+        />
+        <button
+          type="submit"
+          data-testid={ SUBMIT }
+        >
+          FINALIZAR PEDIDO
+        </button>
+      </form>
     </div>
   );
 }

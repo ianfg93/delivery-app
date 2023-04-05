@@ -12,8 +12,8 @@ const fetch = axios.create({
   },
 });
 
-const DB = async (method, endpoint, body) => fetch
-  .request({ method, url: endpoint, data: body })
+const DB = async (method, endpoint, body, auth) => fetch
+  .request({ method, url: endpoint, data: body, headers: { Authorization: auth } })
   .then(({ status, data }) => ({ status, data }));
 
 export default DB;

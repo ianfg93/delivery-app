@@ -6,9 +6,10 @@ import MyContext from '../context/Context';
 
 function Products() {
   const navigate = useNavigate();
-  const { products, getProducts, cartTotal } = useContext(MyContext);
+  const { products, getProducts, cartTotal, getSellers } = useContext(MyContext);
   useEffect(() => {
     getProducts();
+    getSellers();
   }, []);
 
   return (

@@ -54,6 +54,17 @@ function Provider({ children }) {
     }
   }
 
+  async function finishPurchase(purchase) {
+    try {
+      console.log(purchase);
+      const response = await DB('post', '/sale', { ...purchase }, JSON
+        .parse(localStorage.getItem('user')).token);
+      return navigate(`/customer/orders/${response.data.id}`);
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
   async function getProducts() {
     try {
       const response = await DB('get', '/products');
@@ -90,6 +101,7 @@ function Provider({ children }) {
     login,
     register,
     getSellers,
+    finishPurchase,
   }), [
     loading,
     isHidden,
