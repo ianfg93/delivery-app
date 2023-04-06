@@ -5,7 +5,7 @@ const PASS_MIN_LENGTH = 6;
 const NAME_MIN_LENGTH = 12;
 
 export default function AdminManage() {
-  const { registerADM } = useContext(MyContext);
+  const { registerADM, isHidden } = useContext(MyContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -76,6 +76,12 @@ export default function AdminManage() {
           Cadastrar
         </button>
       </form>
+      <small
+        hidden={ isHidden }
+        data-testid="admin_manage__element-invalid-register"
+      >
+        Registro invalido
+      </small>
     </div>
   );
 }

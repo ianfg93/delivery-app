@@ -61,8 +61,9 @@ function Provider({ children }) {
     try {
       await DB('post', '/admin/register', { email, password, name, role }, JSON
         .parse(localStorage.getItem('user')).token);
+      setIsHidden(true);
     } catch (err) {
-      setHaveConflict(false);
+      setIsHidden(false);
       return new Error(err);
     }
   }
