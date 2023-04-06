@@ -10,7 +10,6 @@ import OrderDetails from './Pages/OrderDetails';
 import AdminManage from './Pages/AdminManage';
 import Seller from './Pages/Seller';
 
-
 function App() {
   return (
     <div className="App">

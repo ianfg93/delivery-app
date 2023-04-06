@@ -39,6 +39,7 @@ function Provider({ children }) {
       const response = await DB('post', '/user', { email, password });
       localStorage.setItem('user', JSON.stringify(response.data));
       if (response.data.role === 'customer') return navigate('/customer/products');
+      if (response.data.role === 'administrator') return navigate('/admin/manage');
       return navigate('/seller/orders');
     } catch (err) {
       setIsHidden(false);
