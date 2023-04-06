@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import MyContext from '../context/Context';
 
 const PASS_MIN_LENGTH = 6;
 const NAME_MIN_LENGTH = 12;
 
 export default function AdminManage() {
+  const { registerADM, isHidden } = useContext(MyContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState('seller');
 
   const nameRegex = () => name.length >= NAME_MIN_LENGTH;
   const emailRegex = () => /^\S+@\S+\.\S+$/i.test(email);
   const passRegex = () => password.length >= PASS_MIN_LENGTH;
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await registerADM(email, password, name, role);
+  };
+
   return (
     <div>
       <div>Gerenciar Usuário</div>
       <h1>Cadastrar novo usuário</h1>
-      <form action="post">
+      <form action="post" onSubmit={ (e) => handleSubmit(e) }>
         <label htmlFor="inputMail">
           Nome:
           <input
@@ -54,6 +62,7 @@ export default function AdminManage() {
             name="select-role"
             data-testid="admin_manage__select-role"
             defaultValue="seller"
+            onInput={ ({ target: { value } }) => setRole(value) }
           >
             <option value="seller">seller</option>
             <option value="customer">customer</option>
@@ -67,6 +76,12 @@ export default function AdminManage() {
           Cadastrar
         </button>
       </form>
+      <small
+        hidden={ isHidden }
+        data-testid="admin_manage__element-invalid-register"
+      >
+        Registro invalido
+      </small>
     </div>
   );
 }

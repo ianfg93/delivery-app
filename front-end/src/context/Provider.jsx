@@ -39,6 +39,7 @@ function Provider({ children }) {
       const response = await DB('post', '/user', { email, password });
       localStorage.setItem('user', JSON.stringify(response.data));
       if (response.data.role === 'customer') return navigate('/customer/products');
+      if (response.data.role === 'administrator') return navigate('/admin/manage');
       return navigate('/seller/orders');
     } catch (err) {
       setIsHidden(false);
@@ -52,6 +53,17 @@ function Provider({ children }) {
       return navigate('/customer/products');
     } catch (err) {
       setHaveConflict(false);
+      return new Error(err);
+    }
+  }
+
+  async function registerADM(email, password, name, role) {
+    try {
+      await DB('post', '/admin/register', { email, password, name, role }, JSON
+        .parse(localStorage.getItem('user')).token);
+      setIsHidden(true);
+    } catch (err) {
+      setIsHidden(false);
       return new Error(err);
     }
   }
@@ -132,6 +144,7 @@ function Provider({ children }) {
     getProducts,
     login,
     register,
+    registerADM,
     getSellers,
     finishPurchase,
     getOrders,

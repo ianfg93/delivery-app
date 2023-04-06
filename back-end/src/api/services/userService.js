@@ -29,8 +29,24 @@ const createUser = async (name, email, password) => {
   return user;
 };
 
+const createUserADM = async (name, email, password, role) => {
+  const user = await User.findOrCreate({
+    where: {
+      [Op.or]: [{ name }, { email }],
+    },
+    defaults: {
+      name,
+      email,
+      password,
+      role,
+    },
+  });
+  return user;
+};
+
 module.exports = {
   autenticateUser,
+  createUserADM,
   createUser,
   findSellers,
 };
