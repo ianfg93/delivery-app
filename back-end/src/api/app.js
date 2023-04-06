@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors'); 
-const { getUser, create, getSeller } = require('./controllers/UserController');
+const { getUser, create, getSeller, createADM } = require('./controllers/UserController');
 const { findAllProductsController } = require('./controllers/ProductController');
 const { createNewSale,
    getSale, getSaleById, getSellerById } = require('./controllers/SaleController');
@@ -22,6 +22,7 @@ app.get('/sale/:id', (req, res) => getSellerById(req, res));
 app.get('/sale/details/:id', (req, res) => getSaleById(req, res));
 app.post('/user', (req, res) => getUser(req, res));
 app.post('/sale', validateToken, (req, res) => createNewSale(req, res));
+app.post('/admin/register', validateToken, (req, res) => createADM(req, res));
 app.post('/register', (req, res) => create(req, res));
 
 module.exports = app;

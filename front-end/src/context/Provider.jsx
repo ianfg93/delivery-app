@@ -57,6 +57,16 @@ function Provider({ children }) {
     }
   }
 
+  async function registerADM(email, password, name, role) {
+    try {
+      await DB('post', '/admin/register', { email, password, name, role }, JSON
+        .parse(localStorage.getItem('user')).token);
+    } catch (err) {
+      setHaveConflict(false);
+      return new Error(err);
+    }
+  }
+
   async function finishPurchase(purchase) {
     try {
       const response = await DB('post', '/sale', { ...purchase }, JSON
@@ -133,6 +143,7 @@ function Provider({ children }) {
     getProducts,
     login,
     register,
+    registerADM,
     getSellers,
     finishPurchase,
     getOrders,
