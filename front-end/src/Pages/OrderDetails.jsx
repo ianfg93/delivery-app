@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import MyContext from '../context/Context';
 import Navbar from '../Components/Navbar';
 
-const COMMON = 'customer_order_details';
+// const COMMON = 'customer_order_details';
 
 export default function OrderDetails() {
   const [details, setDetails] = useState();
@@ -14,6 +14,7 @@ export default function OrderDetails() {
     async function awaitData() {
       setDetails(await getOrderDetails(id));
     }
+    console.log(details);
     awaitData();
   }, []);
 
@@ -21,7 +22,7 @@ export default function OrderDetails() {
     <div>
       <Navbar />
       <h2>detalhes do pedido</h2>
-      { details !== undefined
+      {/* { details !== undefined
         && (
           <div>
             <div>
@@ -45,7 +46,7 @@ export default function OrderDetails() {
                 { details.saleDate }
               </p>
               <p
-                data-testid={ `${COMMON}element-order-details-label-delivery-status` }
+                data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
               >
                 { details.status }
               </p>
@@ -107,7 +108,7 @@ export default function OrderDetails() {
               { details.totalPrice.replace('.', ',') }
             </div>
           </div>
-        )}
+        )} */}
     </div>
   );
 }
