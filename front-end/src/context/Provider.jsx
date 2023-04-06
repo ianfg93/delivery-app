@@ -38,7 +38,8 @@ function Provider({ children }) {
     try {
       const response = await DB('post', '/user', { email, password });
       localStorage.setItem('user', JSON.stringify(response.data));
-      return navigate('/customer/products');
+      if (response.data.role === 'customer') return navigate('/customer/products');
+      return navigate('/seller/orders');
     } catch (err) {
       setIsHidden(false);
       return new Error(err);
@@ -77,6 +78,7 @@ function Provider({ children }) {
   async function getOrderDetails(id) {
     try {
       const response = await DB('get', `/sale/details/${id}`);
+      console.log(response);
       return response.data;
     } catch (err) {
       return new Error(err);
@@ -96,6 +98,16 @@ function Provider({ children }) {
     try {
       const response = await DB('get', '/user/sellers');
       return setSellers(response.data);
+    } catch (err) {
+      return new Error(err);
+    }
+  }
+
+  async function getSalesByUserId(id) {
+    try {
+      const response = await DB('get', `/sale/${id}`);
+      console.log(response.data);
+      return response.data;
     } catch (err) {
       return new Error(err);
     }
@@ -123,6 +135,7 @@ function Provider({ children }) {
     getSellers,
     finishPurchase,
     getOrders,
+    getSalesByUserId,
   }), [
     loading,
     isHidden,
