@@ -1,14 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MyContext from '../context/Context';
 import Navbar from '../Components/NavbarSeller';
+import convertDate from '../utils/convertDate';
 
-const ITEM = 'cseller_orders__element-order-id-';
+const ITEM = 'seller_orders__element-order-id-';
 const ADDRESS = 'seller_orders__element-card-address-';
 const DATE = 'seller_orders__element-order-date-';
 const PRICE = 'seller_orders__element-card-price-';
 const STATUS = 'seller_orders__element-delivery-status-';
 
 export default function Seller() {
+  const navigate = useNavigate();
   const { getSalesByUserId } = useContext(MyContext);
   const [salesByUserId, setSalesByUserId] = useState([]);
 
@@ -17,6 +20,7 @@ export default function Seller() {
     async function awaitSeller() {
       if (getSellerLocal) {
         const response = await getSalesByUserId(getSellerLocal.id);
+        console.log(response);
         setSalesByUserId(response);
       }
     }
@@ -28,13 +32,19 @@ export default function Seller() {
       <Navbar />
       <div>
         {salesByUserId.map((sale, index) => (
-          <div key={ index }>
-            <p data-testid={ `${ITEM}${index}` }>{sale.id}</p>
-            <p data-testid={ `${STATUS}${index}` }>{sale.status}</p>
-            <p data-testid={ `${DATE}${index}` }>{sale.saleDate}</p>
-            <p data-testid={ `${PRICE}${index}` }>{sale.totalPrice}</p>
-            <p data-testid={ `${ADDRESS}${index}` }>{sale.address}</p>
-          </div>
+          <button
+            type="button"
+            key={ index }
+            onClick={ () => navigate(`/seller/orders/${sale.id}`) }
+          >
+            <div>
+              <p data-testid={ `${ITEM}${sale.id}` }>{sale.id}</p>
+              <p data-testid={ `${STATUS}${sale.id}` }>{sale.status}</p>
+              <p data-testid={ `${DATE}${sale.id}` }>{convertDate(sale) }</p>
+              <p data-testid={ `${PRICE}${sale.id}` }>{sale.totalPrice}</p>
+              <p data-testid={ `${ADDRESS}${sale.id}` }>{sale.deliveryAddress}</p>
+            </div>
+          </button>
         ))}
       </div>
     </div>

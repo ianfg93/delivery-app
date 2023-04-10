@@ -117,6 +117,7 @@ function Provider({ children }) {
   async function getSalesByUserId(id) {
     try {
       const response = await DB('get', `/sale/${id}`);
+      console.log(response);
       return response.data;
     } catch (err) {
       return new Error(err);

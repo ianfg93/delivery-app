@@ -4,9 +4,9 @@ import MyContext from '../context/Context';
 import Navbar from '../Components/Navbar';
 import convertDate from '../utils/convertDate';
 
-const COMMON = 'customer_order_details';
+const COMMON = 'seller_order_details';
 
-export default function OrderDetails() {
+export default function SellerDetails() {
   const [details, setDetails] = useState();
   const [showDetails, setShowDetails] = useState(false);
   const { getOrderDetails } = useContext(MyContext);
@@ -20,6 +20,12 @@ export default function OrderDetails() {
     }
     awaitData();
   }, []);
+
+  const convertSubTotal = (prod) => {
+    const total = (prod.quantity * prod.product.price).toFixed(2);
+    const totalString = String(total).replace('.', ',');
+    return totalString;
+  };
 
   return (
     <div>
@@ -37,28 +43,28 @@ export default function OrderDetails() {
                 { details.id }
               </h3>
               <p
-                data-testid={ `${COMMON}__element-order-details-label-seller-name` }
-              >
-                P. Vend:
-                {' '}
-                { details.sellers.name }
-              </p>
-              <p
                 data-testid={ `${COMMON}__element-order-details-label-order-date` }
               >
                 { convertDate(details) }
               </p>
-              <p
-                data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
-              >
-                { details.status }
-              </p>
+              <button type="button">
+                <p
+                  data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
+                >
+                  { details.status }
+                </p>
+              </button>
+              <button type="button" data-testid={ `${COMMON}__button-preparing-check` }>
+                <p>
+                  Preparar pedido
+                </p>
+              </button>
               <button
                 type="button"
-                data-testid={ `${COMMON}__button-delivery-check` }
+                data-testid={ `${COMMON}__button-dispatch-check` }
                 disabled
               >
-                Marcar como entregue
+                Saiu para entrega
               </button>
             </div>
             <table>
@@ -101,7 +107,7 @@ export default function OrderDetails() {
                     <td
                       data-testid={ `${COMMON}__element-order-table-sub-total-${i}` }
                     >
-                      { String(prod.quantity * prod.product.price).replace('.', ',') }
+                      { convertSubTotal(prod) }
                     </td>
                   </tr>)) }
               </tbody>
