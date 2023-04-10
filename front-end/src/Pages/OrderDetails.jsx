@@ -3,26 +3,41 @@ import { useParams } from 'react-router-dom';
 import MyContext from '../context/Context';
 import Navbar from '../Components/Navbar';
 
-// const COMMON = 'customer_order_details';
+const COMMON = 'customer_order_details';
 
 export default function OrderDetails() {
   const [details, setDetails] = useState();
+  const [showDetails, setShowDetails] = useState(false);
   const { getOrderDetails } = useContext(MyContext);
   const { id } = useParams();
 
   useEffect(() => {
     async function awaitData() {
-      setDetails(await getOrderDetails(id));
+      const response = await getOrderDetails(id);
+      setDetails(response);
+      setShowDetails(true);
     }
-    console.log(details);
     awaitData();
   }, []);
+
+  const convertDate = (obj) => {
+    const LIMIT = 9;
+    const date = obj.saleDate;
+    const year = new Date(date).getFullYear();
+    const month = new Date(date).getMonth() + Number(1);
+    const day = new Date(date).getDate();
+    const finalMonth = +month > LIMIT ? month.toString() : `0${month}`;
+    const finalDay = +day > LIMIT ? day.toString() : `0${day}`;
+    const finalDate = `${finalDay}/${finalMonth}/${year}`;
+
+    return finalDate;
+  };
 
   return (
     <div>
       <Navbar />
       <h2>detalhes do pedido</h2>
-      {/* { details !== undefined
+      { showDetails
         && (
           <div>
             <div>
@@ -38,12 +53,12 @@ export default function OrderDetails() {
               >
                 P. Vend:
                 {' '}
-                { details.seller.name }
+                { details.sellers.name }
               </p>
               <p
                 data-testid={ `${COMMON}__element-order-details-label-order-date` }
               >
-                { details.saleDate }
+                { convertDate(details) }
               </p>
               <p
                 data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
@@ -53,6 +68,7 @@ export default function OrderDetails() {
               <button
                 type="button"
                 data-testid={ `${COMMON}__button-delivery-check` }
+                disabled
               >
                 Marcar como entregue
               </button>
@@ -83,13 +99,13 @@ export default function OrderDetails() {
 
                     </td>
                     <td
-                      data-testid={ `${COMMON}element-order-table-quantity-${i}` }
+                      data-testid={ `${COMMON}__element-order-table-quantity-${i}` }
                     >
                       { prod.quantity }
 
                     </td>
                     <td
-                      data-testid={ `${COMMON}element-order-table-unit-price-${i}` }
+                      data-testid={ `${COMMON}__element-order-table-unit-price-${i}` }
                     >
                       { String(prod.product.price).replace('.', ',') }
 
@@ -108,7 +124,7 @@ export default function OrderDetails() {
               { details.totalPrice.replace('.', ',') }
             </div>
           </div>
-        )} */}
+        )}
     </div>
   );
 }
