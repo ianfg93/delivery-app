@@ -80,7 +80,7 @@ function Provider({ children }) {
 
   async function getOrders(id) {
     try {
-      const response = await DB('get', `/sale/${id}`);
+      const response = await DB('get', `/sale/orders/${id}`);
       setOrders(response.data);
     } catch (err) {
       return new Error(err);
@@ -114,10 +114,9 @@ function Provider({ children }) {
     }
   }
 
-  async function getSalesByUserId(id) {
+  async function getSalesBySellerId(id) {
     try {
       const response = await DB('get', `/sale/${id}`);
-      console.log(response);
       return response.data;
     } catch (err) {
       return new Error(err);
@@ -147,7 +146,7 @@ function Provider({ children }) {
     getSellers,
     finishPurchase,
     getOrders,
-    getSalesByUserId,
+    getSalesBySellerId,
   }), [
     loading,
     isHidden,

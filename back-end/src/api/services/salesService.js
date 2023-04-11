@@ -47,7 +47,6 @@ const findSaleById = async (id) => {
         { model: User, as: 'sellers' },
       ],
     });
-    console.log(sale);
     return sale;
   } catch (err) {
     throw new Error();

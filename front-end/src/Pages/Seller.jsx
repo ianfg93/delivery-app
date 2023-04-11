@@ -12,14 +12,14 @@ const STATUS = 'seller_orders__element-delivery-status-';
 
 export default function Seller() {
   const navigate = useNavigate();
-  const { getSalesByUserId } = useContext(MyContext);
+  const { getSalesBySellerId } = useContext(MyContext);
   const [salesByUserId, setSalesByUserId] = useState([]);
 
   useEffect(() => {
     const getSellerLocal = JSON.parse(localStorage.getItem('user') || {});
     async function awaitSeller() {
       if (getSellerLocal) {
-        const response = await getSalesByUserId(getSellerLocal.id);
+        const response = await getSalesBySellerId(getSellerLocal.id);
         console.log(response);
         setSalesByUserId(response);
       }
