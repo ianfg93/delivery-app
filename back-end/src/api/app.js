@@ -3,7 +3,8 @@ const cors = require('cors');
 const { getUser, create, getSeller, createADM } = require('./controllers/UserController');
 const { findAllProductsController } = require('./controllers/ProductController');
 const { createNewSale,
-   getSaleByUserId, getSaleById, getSellerById } = require('./controllers/SaleController');
+   getSaleByUserId,
+   getSaleById, getSellerById, updateStatusController } = require('./controllers/SaleController');
 const { validateToken } = require('./middlewares/JWTvalidate');
 
 const app = express();
@@ -24,5 +25,6 @@ app.get('/sale/:id', (req, res) => getSellerById(req, res));
 app.post('/sale', validateToken, (req, res) => createNewSale(req, res));
 app.post('/admin/register', validateToken, (req, res) => createADM(req, res));
 app.post('/register', (req, res) => create(req, res));
+app.put('/sale/update/:id', (req, res) => updateStatusController(req, res));
 
 module.exports = app;

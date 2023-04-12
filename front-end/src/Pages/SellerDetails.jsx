@@ -9,22 +9,35 @@ const COMMON = 'seller_order_details';
 export default function SellerDetails() {
   const [details, setDetails] = useState();
   const [showDetails, setShowDetails] = useState(false);
-  const { getOrderDetails } = useContext(MyContext);
+  const [statusIndex, setStatusIndex] = useState(0);
+  const { getOrderDetails, updateStatus } = useContext(MyContext);
   const { id } = useParams();
+
+  const arrayStatus = ['Pendente', 'Preparando', 'Em Trânsito'];
 
   useEffect(() => {
     async function awaitData() {
       const response = await getOrderDetails(id);
+      if (response.status === 'Preparando') {
+        const index = arrayStatus.indexOf('Preparando');
+        setStatusIndex(index);
+      }
       setDetails(response);
       setShowDetails(true);
     }
     awaitData();
-  }, []);
+  }, [setDetails]);
 
   const convertSubTotal = (prod) => {
     const total = (prod.quantity * prod.product.price).toFixed(2);
     const totalString = String(total).replace('.', ',');
     return totalString;
+  };
+
+  const handleClick = async () => {
+    const update = await updateStatus(details.id, arrayStatus[statusIndex + 1]);
+    setStatusIndex(statusIndex + 1);
+    setDetails(update.data);
   };
 
   return (
@@ -47,14 +60,18 @@ export default function SellerDetails() {
               >
                 { convertDate(details) }
               </p>
-              <button type="button">
-                <p
-                  data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
-                >
-                  { details.status }
-                </p>
-              </button>
-              <button type="button" data-testid={ `${COMMON}__button-preparing-check` }>
+
+              <p
+                data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
+              >
+                { details.status }
+              </p>
+              <button
+                type="button"
+                onClick={ () => handleClick() }
+                disabled={ (details.status !== 'Pendente') }
+                data-testid={ `${COMMON}__button-preparing-check` }
+              >
                 <p>
                   Preparar pedido
                 </p>
@@ -62,7 +79,8 @@ export default function SellerDetails() {
               <button
                 type="button"
                 data-testid={ `${COMMON}__button-dispatch-check` }
-                disabled
+                onClick={ handleClick }
+                disabled={ details.status !== 'Preparando' }
               >
                 Saiu para entrega
               </button>

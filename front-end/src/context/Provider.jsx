@@ -123,6 +123,16 @@ function Provider({ children }) {
     }
   }
 
+  async function updateStatus(id, body) {
+    try {
+      const response = await DB('put', `/sale/update/${id}`, { status: body });
+      // const result = await getOrderDetails(id);
+      return response;
+    } catch (error) {
+      return new Error(error);
+    }
+  }
+
   const value = useMemo(() => ({
     loading,
     isHidden,
@@ -147,6 +157,7 @@ function Provider({ children }) {
     finishPurchase,
     getOrders,
     getSalesBySellerId,
+    updateStatus,
   }), [
     loading,
     isHidden,

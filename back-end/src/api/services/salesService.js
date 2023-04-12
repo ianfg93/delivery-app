@@ -53,10 +53,31 @@ const findSaleById = async (id) => {
   }
 };
 
+const updateStatusService = async (id, string) => {
+  try {
+     await Sale.update(
+     { status: string },
+     { where: { id } },
+    );
+    const response = await Sale.findByPk(id, { include: [
+        { model: SaleProduct,
+          as: 'products',
+          include: [{ model: Product, as: 'product' }],
+        },
+        { model: User, as: 'sellers' },
+      ],
+    });
+    return response;
+  } catch (err) {
+    throw new Error();
+  }
+};
+
 module.exports = {
   createSale,
   createSaleProducts,
   getSalesByUserId,
   getSalesBySellerId,
   findSaleById,
+  updateStatusService,
 };
