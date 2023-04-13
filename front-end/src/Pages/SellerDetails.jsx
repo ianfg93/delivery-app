@@ -5,17 +5,24 @@ import Navbar from '../Components/Navbar';
 import convertDate from '../utils/convertDate';
 import convertSubTotal from '../utils/convertSubTotal';
 
-const COMMON = 'customer_order_details';
+const COMMON = 'seller_order_details';
 
-export default function OrderDetails() {
+export default function SellerDetails() {
   // const [details, setDetails] = useState();
   const [showDetails, setShowDetails] = useState(false);
+  const [statusIndex, setStatusIndex] = useState(0);
   const { getOrderDetails, updateStatus, details, setDetails } = useContext(MyContext);
   const { id } = useParams();
+
+  const arrayStatus = ['Pendente', 'Preparando', 'Em Trânsito'];
 
   useEffect(() => {
     async function awaitData() {
       const response = await getOrderDetails(id);
+      if (response.status === 'Preparando') {
+        const index = arrayStatus.indexOf('Preparando');
+        setStatusIndex(index);
+      }
       setDetails(response);
       setShowDetails(true);
     }
@@ -23,7 +30,8 @@ export default function OrderDetails() {
   }, [setDetails, getOrderDetails, id]);
 
   const handleStatus = async () => {
-    const update = await updateStatus(details.id, 'Entregue');
+    const update = await updateStatus(details.id, arrayStatus[statusIndex + 1]);
+    setStatusIndex(statusIndex + 1);
     setDetails(update.data);
   };
 
@@ -43,17 +51,11 @@ export default function OrderDetails() {
                 { details.id }
               </h3>
               <p
-                data-testid={ `${COMMON}__element-order-details-label-seller-name` }
-              >
-                P. Vend:
-                {' '}
-                { details.sellers.name }
-              </p>
-              <p
                 data-testid={ `${COMMON}__element-order-details-label-order-date` }
               >
                 { convertDate(details) }
               </p>
+
               <p
                 data-testid={ `${COMMON}__element-order-details-label-delivery-status` }
               >
@@ -61,11 +63,21 @@ export default function OrderDetails() {
               </p>
               <button
                 type="button"
-                data-testid={ `${COMMON}__button-delivery-check` }
                 onClick={ handleStatus }
-                disabled={ details.status !== 'Em Trânsito' }
+                disabled={ (details.status !== 'Pendente') }
+                data-testid={ `${COMMON}__button-preparing-check` }
               >
-                Marcar como entregue
+                <p>
+                  Preparar pedido
+                </p>
+              </button>
+              <button
+                type="button"
+                data-testid={ `${COMMON}__button-dispatch-check` }
+                onClick={ handleStatus }
+                disabled={ details.status !== 'Preparando' }
+              >
+                Saiu para entrega
               </button>
             </div>
             <table>

@@ -13,6 +13,7 @@ function Provider({ children }) {
   const [cartTotal, setCartTotal] = useState([0]);
   const [cartQuantities, setCartQuantities] = useState([]);
   const [sellers, setSellers] = useState([]);
+  const [details, setDetails] = useState();
   const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ function Provider({ children }) {
 
   async function getOrders(id) {
     try {
-      const response = await DB('get', `/sale/${id}`);
+      const response = await DB('get', `/sale/orders/${id}`);
       setOrders(response.data);
     } catch (err) {
       return new Error(err);
@@ -114,12 +115,22 @@ function Provider({ children }) {
     }
   }
 
-  async function getSalesByUserId(id) {
+  async function getSalesBySellerId(id) {
     try {
       const response = await DB('get', `/sale/${id}`);
       return response.data;
     } catch (err) {
       return new Error(err);
+    }
+  }
+
+  async function updateStatus(id, body) {
+    try {
+      const response = await DB('put', `/sale/update/${id}`, { status: body });
+      // const result = await getOrderDetails(id);
+      return response;
+    } catch (error) {
+      return new Error(error);
     }
   }
 
@@ -132,6 +143,8 @@ function Provider({ children }) {
     cartQuantities,
     sellers,
     orders,
+    details,
+    setDetails,
     getOrderDetails,
     setCartTotal,
     navigate,
@@ -146,7 +159,8 @@ function Provider({ children }) {
     getSellers,
     finishPurchase,
     getOrders,
-    getSalesByUserId,
+    getSalesBySellerId,
+    updateStatus,
   }), [
     loading,
     isHidden,

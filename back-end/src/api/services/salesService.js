@@ -47,8 +47,27 @@ const findSaleById = async (id) => {
         { model: User, as: 'sellers' },
       ],
     });
-    console.log(sale);
     return sale;
+  } catch (err) {
+    throw new Error();
+  }
+};
+
+const updateStatusService = async (id, string) => {
+  try {
+     await Sale.update(
+     { status: string },
+     { where: { id } },
+    );
+    const response = await Sale.findByPk(id, { include: [
+        { model: SaleProduct,
+          as: 'products',
+          include: [{ model: Product, as: 'product' }],
+        },
+        { model: User, as: 'sellers' },
+      ],
+    });
+    return response;
   } catch (err) {
     throw new Error();
   }
@@ -60,4 +79,5 @@ module.exports = {
   getSalesByUserId,
   getSalesBySellerId,
   findSaleById,
+  updateStatusService,
 };
