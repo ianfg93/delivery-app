@@ -3,14 +3,15 @@ import { useParams } from 'react-router-dom';
 import MyContext from '../context/Context';
 import Navbar from '../Components/Navbar';
 import convertDate from '../utils/convertDate';
+import convertSubTotal from '../utils/convertSubTotal';
 
 const COMMON = 'seller_order_details';
 
 export default function SellerDetails() {
-  const [details, setDetails] = useState();
+  // const [details, setDetails] = useState();
   const [showDetails, setShowDetails] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
-  const { getOrderDetails, updateStatus } = useContext(MyContext);
+  const { getOrderDetails, updateStatus, details, setDetails } = useContext(MyContext);
   const { id } = useParams();
 
   const arrayStatus = ['Pendente', 'Preparando', 'Em Trânsito'];
@@ -26,15 +27,9 @@ export default function SellerDetails() {
       setShowDetails(true);
     }
     awaitData();
-  }, [setDetails]);
+  }, [setDetails, getOrderDetails, id]);
 
-  const convertSubTotal = (prod) => {
-    const total = (prod.quantity * prod.product.price).toFixed(2);
-    const totalString = String(total).replace('.', ',');
-    return totalString;
-  };
-
-  const handleClick = async () => {
+  const handleStatus = async () => {
     const update = await updateStatus(details.id, arrayStatus[statusIndex + 1]);
     setStatusIndex(statusIndex + 1);
     setDetails(update.data);
@@ -68,7 +63,7 @@ export default function SellerDetails() {
               </p>
               <button
                 type="button"
-                onClick={ () => handleClick() }
+                onClick={ handleStatus }
                 disabled={ (details.status !== 'Pendente') }
                 data-testid={ `${COMMON}__button-preparing-check` }
               >
@@ -79,7 +74,7 @@ export default function SellerDetails() {
               <button
                 type="button"
                 data-testid={ `${COMMON}__button-dispatch-check` }
-                onClick={ handleClick }
+                onClick={ handleStatus }
                 disabled={ details.status !== 'Preparando' }
               >
                 Saiu para entrega

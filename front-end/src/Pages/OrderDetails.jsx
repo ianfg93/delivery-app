@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 import MyContext from '../context/Context';
 import Navbar from '../Components/Navbar';
 import convertDate from '../utils/convertDate';
+import convertSubTotal from '../utils/convertSubTotal';
 
 const COMMON = 'customer_order_details';
 
 export default function OrderDetails() {
-  const [details, setDetails] = useState();
+  // const [details, setDetails] = useState();
   const [showDetails, setShowDetails] = useState(false);
-  const { getOrderDetails } = useContext(MyContext);
+  const { getOrderDetails, updateStatus, details, setDetails } = useContext(MyContext);
   const { id } = useParams();
 
   useEffect(() => {
@@ -19,7 +20,12 @@ export default function OrderDetails() {
       setShowDetails(true);
     }
     awaitData();
-  }, []);
+  }, [setDetails, getOrderDetails, id]);
+
+  const handleStatus = async () => {
+    const update = await updateStatus(details.id, 'Entregue');
+    setDetails(update.data);
+  };
 
   return (
     <div>
@@ -56,7 +62,8 @@ export default function OrderDetails() {
               <button
                 type="button"
                 data-testid={ `${COMMON}__button-delivery-check` }
-                disabled
+                onClick={ handleStatus }
+                disabled={ details.status !== 'Em Trânsito' }
               >
                 Marcar como entregue
               </button>
@@ -101,7 +108,7 @@ export default function OrderDetails() {
                     <td
                       data-testid={ `${COMMON}__element-order-table-sub-total-${i}` }
                     >
-                      { String(prod.quantity * prod.product.price).replace('.', ',') }
+                      { convertSubTotal(prod) }
                     </td>
                   </tr>)) }
               </tbody>

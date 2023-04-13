@@ -13,6 +13,7 @@ function Provider({ children }) {
   const [cartTotal, setCartTotal] = useState([0]);
   const [cartQuantities, setCartQuantities] = useState([]);
   const [sellers, setSellers] = useState([]);
+  const [details, setDetails] = useState();
   const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
@@ -142,6 +143,8 @@ function Provider({ children }) {
     cartQuantities,
     sellers,
     orders,
+    details,
+    setDetails,
     getOrderDetails,
     setCartTotal,
     navigate,
